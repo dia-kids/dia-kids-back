@@ -15,7 +15,8 @@ public class ErrorHandler {
     public ErrorResponse handleNotFoundException(final RuntimeException exception) {
         return new ErrorResponse(exception.getMessage());
     }
-    @ExceptionHandler(value = {ValidationException.class })
+    @ExceptionHandler(value = { ValidationException.class,
+                                InvalidCommentException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBadRequestException(final RuntimeException exception) {
         return new ErrorResponse(exception.getMessage());

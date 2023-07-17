@@ -23,14 +23,12 @@ import java.util.Objects;
 @Service
 @AllArgsConstructor
 public class FileService {
-    private final Path fileStorageLocation;
     private final PictureRepository repository;
 
-    private String saveFile(MultipartFile file) throws IOException {
+    private void saveFile(MultipartFile file) throws IOException {
         String fileName = Objects.requireNonNull(file.getOriginalFilename());
-        Path targetLocation = fileStorageLocation.resolve("pictures/" + fileName);
-        Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-        return targetLocation.toString();
+        Path targetLocation = Paths.get("pictures/" + fileName);
+        Files.copy(file.getInputStream(),  targetLocation, StandardCopyOption.REPLACE_EXISTING);
     }
 
     public Picture addPicture(MultipartFile file) throws IOException {
