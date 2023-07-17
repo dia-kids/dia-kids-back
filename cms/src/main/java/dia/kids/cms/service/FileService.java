@@ -21,14 +21,19 @@ import java.nio.file.Paths;
 @AllArgsConstructor
 public class FileService {
     private final PictureRepository repository;
-    public ResponseEntity<Resource> getPicture(Integer id) throws IOException {
-        Picture picture = repository.findById(id).orElseThrow(() -> new PictureNotFoundException("Picture not found"));
+
+    public ResponseEntity<Resource> getPicture(Long id) throws IOException {
+        Picture picture = repository.findById(id)
+                                    .orElseThrow(() -> new PictureNotFoundException("Picture not found"));
+
         String name = picture.getName();
         File file = new File("pictures\\" + name);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
         headers.add("Pragma", "no-cache");
         headers.add("Expires", "0");
+        
         Path path = Paths.get(file.getAbsolutePath());
         ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
         return ResponseEntity.ok()

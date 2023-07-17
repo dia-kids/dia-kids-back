@@ -15,8 +15,10 @@ import java.io.IOException;
 @AllArgsConstructor
 public class FileController {
     private final FileService service;
+
     @GetMapping("/api/pictures/{pictureId}")
-    public ResponseEntity<Resource> getPicture(@RequestBody @PathVariable Integer pictureId) throws IOException {
+    public ResponseEntity<Resource> getPicture(@RequestBody @PathVariable Long pictureId) 
+        throws IOException {
         return service.getPicture(pictureId);
     }
 }

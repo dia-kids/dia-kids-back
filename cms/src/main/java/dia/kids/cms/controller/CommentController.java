@@ -16,11 +16,12 @@ public class CommentController {
     private final CommentService service;
 
     @GetMapping("/api/comments/{commentId}")
-    public Comment getComment(@RequestBody @PathVariable Integer commentId) {
+    public Comment getComment(@RequestBody @PathVariable Long commentId) {
         return service.getComment(commentId);
     }
+
     @GetMapping("/api/commentsbyarticle/{articleId}")
-    public List<Comment> getComments(@RequestBody @PathVariable Integer articleId) {
+    public List<Comment> getComments(@RequestBody @PathVariable Long articleId) {
         return service.getAllByArticleID(articleId);
     }
 }

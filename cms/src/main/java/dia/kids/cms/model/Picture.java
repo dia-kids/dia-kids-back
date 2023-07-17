@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class Picture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    Long id;
 
     @Column(name = "name", nullable = false)
     String name;

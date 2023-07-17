@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class ArticleController {
     private final ArticleService service;
+
     @GetMapping("/api/articles/{articleId}")
-    public Article getArticle(@RequestBody @PathVariable Integer articleId) {
+    public Article getArticle(@RequestBody @PathVariable Long articleId) {
         return service.getArticle(articleId);
     }
 

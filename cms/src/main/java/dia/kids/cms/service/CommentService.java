@@ -12,10 +12,13 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentService {
     private final CommentRepository repository;
-    public Comment getComment(Integer id) {
-        return repository.findById(id).orElseThrow(() -> new CommentNotFoundException("Comment not found"));
+
+    public Comment getComment(Long id) {
+        return repository.findById(id)
+                         .orElseThrow(() -> new CommentNotFoundException("Comment not found"));
     }
-    public List<Comment> getAllByArticleID(Integer id) {
+
+    public List<Comment> getAllByArticleID(Long id) {
         return repository.findAllByArticleId(id);
     }
 }
