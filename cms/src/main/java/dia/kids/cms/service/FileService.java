@@ -27,6 +27,10 @@ public class FileService {
 
     private void saveFile(MultipartFile file) throws IOException {
         String fileName = Objects.requireNonNull(file.getOriginalFilename());
+        Path pictures = Path.of("pictures");
+        if (!Files.exists(pictures)) {
+            Files.createDirectory(pictures);
+        }
         Path targetLocation = Paths.get("pictures/" + fileName);
         Files.copy(file.getInputStream(),  targetLocation, StandardCopyOption.REPLACE_EXISTING);
     }
@@ -48,7 +52,7 @@ public class FileService {
 
     public ResponseEntity<Resource> getPicture(Long id) throws IOException {
         Picture picture = repository.findById(id)
-                                    .orElseThrow(() -> new PictureNotFoundException("Picture not found"));
+                                    .orElseThrow(() -> new PictureNotFoundException("Picture not found!"));
 
         String name = picture.getName();
         File file = new File("pictures/" + name);

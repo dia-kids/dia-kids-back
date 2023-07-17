@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  server:
+    build:
+      dockerfile: Dockerfile
+    image: server
+    container_name: cms
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/cms
+      - POSTGRES_USER=db_cms
+      - POSTGRES_PASSWORD=aBrDifA4392
+
+  db:
+    image: postgres:13.7-alpine
+    container_name: server-db
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_DB=cms
+      - POSTGRES_USER=db_cms
+      - POSTGRES_PASSWORD=aBrDifA4392

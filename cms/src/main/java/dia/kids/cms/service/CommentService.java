@@ -42,6 +42,7 @@ public class CommentService {
                                  .articleId(article.getId())
                                  .postedAt(now)
                                  .updatedAt(now)
+                                 .userId(commentDto.getUserId())
                                  .text(commentDto.getText())
                                  .build();
         return repository.save(comment);
@@ -53,6 +54,8 @@ public class CommentService {
     }
 
     public List<Comment> getAllByArticleID(Long id) {
-        return repository.findAllByArticleId(id);
+        Article article = articleRepository.findById(id)
+                                           .orElseThrow(() -> new ArticleNotFoundException("Article not found!"));
+        return repository.findAllByArticleId(article.getId());
     }
 }
