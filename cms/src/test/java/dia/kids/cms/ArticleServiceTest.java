@@ -58,4 +58,20 @@ public class ArticleServiceTest {
         ArticleNotFoundException exception = assertThrows(ArticleNotFoundException.class, () -> service.updateArticle(articleDto, 1000L));
         assertEquals("Article not found!", exception.getMessage());
     }
+
+    @Test
+    public void shouldDeleteArticleIfContains() {
+        ArticleDto articleDto = new ArticleDto();
+        String text = "# dia-kids-back\nBackend repo for dia-kids website\n";
+        articleDto.setText(text);
+        Article article = service.addArticle(articleDto);
+        assertEquals(article, service.getArticle(article.getId()));
+        service.deleteArticle(article.getId());
+        assertThrows(ArticleNotFoundException.class, () -> service.getArticle(article.getId()));
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenDeleteNotExistingArticle() {
+        assertThrows(ArticleNotFoundException.class, () -> service.deleteArticle(1000L));
+    }
 }

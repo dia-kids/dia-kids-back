@@ -1,6 +1,5 @@
 package dia.kids.cms;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dia.kids.cms.controller.ArticleController;
 import dia.kids.cms.exception.ArticleNotFoundException;
@@ -15,15 +14,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ArticleController.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -36,27 +35,27 @@ public class ArticleControllerTest {
     private ObjectMapper mapper;
 
     private final Article article = Article.builder()
-                                          .id(1L)
-                                          .publishedAt(LocalDateTime.now())
-                                          .updatedAt(LocalDateTime.now())
-                                          .text("# Lol text")
-                                          .build();
+            .id(1L)
+            .publishedAt(LocalDateTime.now())
+            .updatedAt(LocalDateTime.now())
+            .text("# Lol text")
+            .build();
 
     @Test
     public void shouldReturnArticleAndCode200() throws Exception {
         when(service.getArticle(any())).thenReturn(article);
 
         mvc.perform(get("/api/articles/1"))
-           .andExpect(status().isOk())
-           .andExpect(jsonPath("$.id").value(1L))
-           .andExpect(jsonPath("$.text").value("# Lol text"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.text").value("# Lol text"));
     }
 
     @Test
     public void shouldReturnCode404IfArticleNotFound() throws Exception {
         when(service.getArticle(any())).thenThrow(ArticleNotFoundException.class);
         mvc.perform(get("/api/articles/2"))
-           .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -67,9 +66,9 @@ public class ArticleControllerTest {
                         .content(mapper.writeValueAsString(new ArticleDto("# Lol text")))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isOk())
-           .andExpect(jsonPath("$.id").value(1L))
-           .andExpect(jsonPath("$.text").value("# Lol text"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.text").value("# Lol text"));
     }
 
     @Test
@@ -80,7 +79,7 @@ public class ArticleControllerTest {
                         .content(mapper.writeValueAsString(new ArticleDto("")))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -91,9 +90,9 @@ public class ArticleControllerTest {
                         .content(mapper.writeValueAsString(new ArticleDto("# Lol text")))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isOk())
-           .andExpect(jsonPath("$.id").value(1L))
-           .andExpect(jsonPath("$.text").value("# Lol text"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.text").value("# Lol text"));
     }
 
     @Test
@@ -104,7 +103,7 @@ public class ArticleControllerTest {
                         .content(mapper.writeValueAsString(new ArticleDto("# Lol text")))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -114,6 +113,21 @@ public class ArticleControllerTest {
                         .content(mapper.writeValueAsString(new ArticleDto("")))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnCode200WhenDeleteArticle() throws Exception {
+        doNothing().when(service).deleteArticle(any());
+
+        mvc.perform(delete("/api/articles/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldReturnCode404WhenDeleteNotExistingArticle() throws Exception {
+        doThrow(ArticleNotFoundException.class).when(service).deleteArticle(any());
+        mvc.perform(delete("/api/articles/1"))
+                .andExpect(status().isNotFound());
     }
 }

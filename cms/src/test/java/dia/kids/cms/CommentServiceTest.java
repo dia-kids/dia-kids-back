@@ -128,4 +128,22 @@ public class CommentServiceTest {
         });
         assertEquals("Article not found!", exception.getMessage());
     }
+
+    @Test
+    public void shouldDeleteCommentIfContains() {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setUserId(1000L);
+        commentDto.setArticleId(article.getId());
+        commentDto.setText("some text");
+        Comment comment = commentService.publishComment(commentDto);
+        assertEquals(comment, commentService.getComment(comment.getId()));
+        commentService.deleteComment(comment.getId());
+        assertThrows(CommentNotFoundException.class, () -> commentService.getComment(comment.getId()));
+    }
+
+    @Test
+    public void shouldThrowExceptionIfDeleteNotExistingComment() {
+        assertThrows(CommentNotFoundException.class, () -> commentService.deleteComment(1000L));
+    }
+
 }

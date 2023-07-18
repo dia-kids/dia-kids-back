@@ -65,4 +65,23 @@ public class FileServiceTest {
         PictureNotFoundException exception = assertThrows(PictureNotFoundException.class, () -> service.updatePicture(newFile, 1000L));
         assertEquals("Picture not found!", exception.getMessage());
     }
+
+    @Test
+    public void shouldDeletePictureIfContains() throws IOException {
+        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("test.png");
+        MockMultipartFile file = new MockMultipartFile("test.png", "test.png", "image/png", inputStream);
+
+        Picture picture = service.addPicture(file);
+        ResponseEntity<Resource> entity = service.getPicture(picture.getId());
+        byte[] downloaded = Objects.requireNonNull(entity.getBody()).getContentAsByteArray();
+        assertArrayEquals(file.getBytes(), downloaded);
+
+        service.deletePicture(picture.getId());
+        assertThrows(PictureNotFoundException.class, () -> service.getPicture(picture.getId()));
+    }
+
+    @Test
+    public void shouldThrowExceptionIfDeleteNotExistingPicture() {
+        assertThrows(PictureNotFoundException.class, () -> service.deletePicture(1000L));
+    }
 }

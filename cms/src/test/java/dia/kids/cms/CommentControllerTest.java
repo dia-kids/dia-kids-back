@@ -16,8 +16,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,31 +37,31 @@ public class CommentControllerTest {
     @Autowired
     private ObjectMapper mapper;
     private final Comment comment = Comment.builder()
-                                          .id(1L)
-                                          .userId(1L)
-                                          .articleId(1L)
-                                          .postedAt(LocalDateTime.now())
-                                          .updatedAt(LocalDateTime.now())
-                                          .text("lol text")
-                                          .build();
+            .id(1L)
+            .userId(1L)
+            .articleId(1L)
+            .postedAt(LocalDateTime.now())
+            .updatedAt(LocalDateTime.now())
+            .text("lol text")
+            .build();
 
     @Test
     public void shouldReturnCode200AndComment() throws Exception {
         when(service.getComment(any())).thenReturn(comment);
 
         mvc.perform(get("/api/comments/1"))
-           .andExpect(status().isOk())
-           .andExpect(jsonPath("$.id").value(1L))
-           .andExpect(jsonPath("$.userId").value(1L))
-           .andExpect(jsonPath("$.articleId").value(1L))
-           .andExpect(jsonPath("$.text").value("lol text"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.userId").value(1L))
+                .andExpect(jsonPath("$.articleId").value(1L))
+                .andExpect(jsonPath("$.text").value("lol text"));
     }
 
     @Test
     public void shouldReturnCode404IfCommentNotFound() throws Exception {
         when(service.getComment(any())).thenThrow(CommentNotFoundException.class);
         mvc.perform(get("/api/comments/2"))
-           .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -68,11 +69,11 @@ public class CommentControllerTest {
         when(service.getAllByArticleID(any())).thenReturn(List.of(comment));
 
         mvc.perform(get("/api/commentsbyarticle/1"))
-           .andExpect(status().isOk())
-           .andExpect(jsonPath("$[0].id").value(1L))
-           .andExpect(jsonPath("$[0].userId").value(1L))
-           .andExpect(jsonPath("$[0].articleId").value(1L))
-           .andExpect(jsonPath("$[0].text").value("lol text"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].userId").value(1L))
+                .andExpect(jsonPath("$[0].articleId").value(1L))
+                .andExpect(jsonPath("$[0].text").value("lol text"));
     }
 
     @Test
@@ -80,7 +81,7 @@ public class CommentControllerTest {
         when(service.getAllByArticleID(any())).thenThrow(ArticleNotFoundException.class);
 
         mvc.perform(get("/api/commentsbyarticle/2"))
-           .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -91,11 +92,11 @@ public class CommentControllerTest {
                         .content(mapper.writeValueAsString(new CommentDto()))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isOk())
-           .andExpect(jsonPath("$.id").value(1L))
-           .andExpect(jsonPath("$.userId").value(1L))
-           .andExpect(jsonPath("$.articleId").value(1L))
-           .andExpect(jsonPath("$.text").value("lol text"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.userId").value(1L))
+                .andExpect(jsonPath("$.articleId").value(1L))
+                .andExpect(jsonPath("$.text").value("lol text"));
     }
 
     @Test
@@ -106,7 +107,7 @@ public class CommentControllerTest {
                         .content(mapper.writeValueAsString(new CommentDto()))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -117,7 +118,7 @@ public class CommentControllerTest {
                         .content(mapper.writeValueAsString(new CommentDto()))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -128,11 +129,11 @@ public class CommentControllerTest {
                         .content(mapper.writeValueAsString(new CommentDto()))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isOk())
-           .andExpect(jsonPath("$.id").value(1L))
-           .andExpect(jsonPath("$.userId").value(1L))
-           .andExpect(jsonPath("$.articleId").value(1L))
-           .andExpect(jsonPath("$.text").value("lol text"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.userId").value(1L))
+                .andExpect(jsonPath("$.articleId").value(1L))
+                .andExpect(jsonPath("$.text").value("lol text"));
     }
 
     @Test
@@ -143,7 +144,7 @@ public class CommentControllerTest {
                         .content(mapper.writeValueAsString(new CommentDto()))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -154,6 +155,22 @@ public class CommentControllerTest {
                         .content(mapper.writeValueAsString(new CommentDto()))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnCode200WhenDeleteComment() throws Exception {
+        doNothing().when(service).deleteComment(any());
+
+        mvc.perform(delete("/api/comments/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldReturnCode404WhenDeleteNotExistingComment() throws Exception {
+        doThrow(CommentNotFoundException.class).when(service).deleteComment(any());
+
+        mvc.perform(delete("/api/comments/1"))
+                .andExpect(status().isNotFound());
     }
 }
