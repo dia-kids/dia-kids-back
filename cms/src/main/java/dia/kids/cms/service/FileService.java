@@ -32,7 +32,7 @@ public class FileService {
             Files.createDirectory(pictures);
         }
         Path targetLocation = Paths.get("pictures/" + fileName);
-        Files.copy(file.getInputStream(),  targetLocation, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
     }
 
     public Picture addPicture(MultipartFile file) throws IOException {
@@ -44,7 +44,7 @@ public class FileService {
 
     public Picture updatePicture(MultipartFile file, Long pictureId) throws IOException {
         Picture picture = repository.findById(pictureId)
-                                    .orElseThrow(() -> new PictureNotFoundException("Picture not found!"));
+                .orElseThrow(() -> new PictureNotFoundException("Picture not found!"));
         saveFile(file);
         picture.setName(file.getOriginalFilename());
         return repository.save(picture);
@@ -52,7 +52,7 @@ public class FileService {
 
     public ResponseEntity<Resource> getPicture(Long id) throws IOException {
         Picture picture = repository.findById(id)
-                                    .orElseThrow(() -> new PictureNotFoundException("Picture not found!"));
+                .orElseThrow(() -> new PictureNotFoundException("Picture not found!"));
 
         String name = picture.getName();
         File file = new File("pictures/" + name);
@@ -65,9 +65,16 @@ public class FileService {
         Path path = Paths.get(file.getAbsolutePath());
         ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
         return ResponseEntity.ok()
-                             .headers(headers)
-                             .contentLength(file.length())
-                             .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                             .body(resource);
+                .headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+    }
+
+    public void deletePicture(Long pictureId) throws IOException {
+        Picture picture = repository.findById(pictureId)
+                .orElseThrow(() -> new PictureNotFoundException("Picture not found!"));
+        repository.deleteById(picture.getId());
+        Files.deleteIfExists(Path.of("pictures/" + picture.getName()));
     }
 }

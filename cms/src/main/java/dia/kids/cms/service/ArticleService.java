@@ -28,7 +28,7 @@ public class ArticleService {
 
     public Article updateArticle(ArticleDto articleDto, Long articleId) {
         Article article = repository.findById(articleId)
-                                    .orElseThrow(() -> new ArticleNotFoundException("Article not found!"));
+                .orElseThrow(() -> new ArticleNotFoundException("Article not found!"));
         article.setText(articleDto.getText());
         article.setUpdatedAt(LocalDateTime.now());
 
@@ -37,6 +37,12 @@ public class ArticleService {
 
     public Article getArticle(Long id) {
         return repository.findById(id)
-                         .orElseThrow(() -> new ArticleNotFoundException("Article not found"));
+                .orElseThrow(() -> new ArticleNotFoundException("Article not found"));
+    }
+
+    public void deleteArticle(Long articleId) {
+        Article article = repository.findById(articleId)
+                .orElseThrow(() -> new ArticleNotFoundException("Article not found!"));
+        repository.deleteById(article.getId());
     }
 }

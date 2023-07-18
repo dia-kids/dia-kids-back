@@ -23,7 +23,7 @@ public class CommentService {
 
     public Comment updateComment(CommentDto commentDto, Long id) {
         Comment comment = repository.findById(id)
-                                    .orElseThrow(() -> new CommentNotFoundException("Comment not found!"));
+                .orElseThrow(() -> new CommentNotFoundException("Comment not found!"));
         if (!Objects.equals(commentDto.getArticleId(), comment.getArticleId())) {
             throw new InvalidCommentException("Article id not equals to existing one!");
         }
@@ -36,26 +36,31 @@ public class CommentService {
     public Comment publishComment(CommentDto commentDto) {
         LocalDateTime now = LocalDateTime.now();
         Article article = articleRepository.findById(commentDto.getArticleId())
-                                           .orElseThrow(() -> new ArticleNotFoundException("Article not found!"));
+                .orElseThrow(() -> new ArticleNotFoundException("Article not found!"));
 
         Comment comment = Comment.builder()
-                                 .articleId(article.getId())
-                                 .postedAt(now)
-                                 .updatedAt(now)
-                                 .userId(commentDto.getUserId())
-                                 .text(commentDto.getText())
-                                 .build();
+                .articleId(article.getId())
+                .postedAt(now)
+                .updatedAt(now)
+                .userId(commentDto.getUserId())
+                .text(commentDto.getText())
+                .build();
         return repository.save(comment);
     }
 
     public Comment getComment(Long id) {
         return repository.findById(id)
-                         .orElseThrow(() -> new CommentNotFoundException("Comment not found"));
+                .orElseThrow(() -> new CommentNotFoundException("Comment not found"));
     }
 
     public List<Comment> getAllByArticleID(Long id) {
         Article article = articleRepository.findById(id)
-                                           .orElseThrow(() -> new ArticleNotFoundException("Article not found!"));
+                .orElseThrow(() -> new ArticleNotFoundException("Article not found!"));
         return repository.findAllByArticleId(article.getId());
+    }
+
+    public void deleteComment(Long commentId) {
+        Comment comment = getComment(commentId);
+        repository.deleteById(comment.getId());
     }
 }
