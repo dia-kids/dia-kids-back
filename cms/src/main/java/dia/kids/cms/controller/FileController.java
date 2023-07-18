@@ -21,7 +21,7 @@ public class FileController {
         return service.addPicture(file);
     }
 
-    @PostMapping("/api/pictures/{pictureId}")
+    @PutMapping("/api/pictures/{pictureId}")
     public Picture updatePicture(@RequestParam("file") MultipartFile file,
                                  @PathVariable Long pictureId)
             throws IOException {
